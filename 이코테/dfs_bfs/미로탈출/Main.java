@@ -1,10 +1,12 @@
 package dfs_bfs.미로탈출;
 
+import java.io.*;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
-class Pair {
+
+class Pair{
     int x;
     int y;
 
@@ -12,62 +14,58 @@ class Pair {
         this.x = x;
         this.y = y;
     }
-
 }
 
 public class Main {
     public static int n, m;
-    public static int[][] graph;
+    public static int graph[][];
+    public static Queue<Pair> q = new LinkedList<>();
 
     //상, 하, 좌, 우
     public static int[] dx = {-1, 1, 0, 0};
     public static int[] dy = {0, 0, -1, 1};
 
-
     public static int bfs(int x, int y) {
-        Queue<Pair> q = new LinkedList<>();
-        q.offer(new Pair(x, y));
+        q.offer(new Pair(x, y));    //탐색 시작 노드를 큐에 삽입
 
-        //큐가 빌때까지 반복
-        while (!q.isEmpty()) {
-            Pair pair = q.poll();
+
+        //큐가 빌 때까지 반복
+        while(!q.isEmpty()) {
+            Pair pair = q.poll();   //큐에서 현재 탐색 노드를 꺼냄
             x = pair.x;
             y = pair.y;
-            System.out.println("poll: "+ x + " " + y);
-            //현재 위치(x, y)에서 4 방향(상하좌우)로 이동
+
+            //상, 하, 좌, 우로 탐색해서 이동할 수 있는 부분이 있는지 확인
             for (int i = 0; i < 4; i++) {
                 int nx = x + dx[i];
                 int ny = y + dy[i];
 
-                System.out.println(nx + " " + ny);
-                //미로 공간을 벗어난 경우 무시
+                //미로 공간을 벗어날 경우 무시
                 if (nx < 0 || nx >= n || ny < 0 || ny >= m) {
                     continue;
                 }
-                //괴물이 없는 부분
                 if (graph[nx][ny] == 1) {
-                    System.out.println("0 point: " + nx + " " + ny);
                     graph[nx][ny] = graph[x][y] + 1;
-                    System.out.println(graph[nx][ny] + "\n");
                     q.offer(new Pair(nx, ny));
                 }
             }
         }
-        //출구 위치의 값 반환
-        return graph[n - 1][m - 1];
+        return graph[n-1][m-1];
     }
 
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
 
-        n = sc.nextInt();
-        m = sc.nextInt();
+        st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
 
-        graph = new int[n][m];
-        //괴물이 있는 부분 0, 괴물이 없는 부분 1
+
+        graph = new int[n+1][m+1];
         for (int i = 0; i < n; i++) {
-            String str = sc.next();
+            String str = br.readLine();
             for (int j = 0; j < m; j++) {
                 graph[i][j] = str.charAt(j) - '0';
             }
