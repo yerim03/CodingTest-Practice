@@ -31,7 +31,7 @@ public class Main {
         System.out.println(max + "\n" + min);
 
     }
-    
+
     public static void dfs(int index, int result) {
         //종료조건
         if (index == n) {
@@ -54,9 +54,6 @@ public class Main {
                         dfs(index + 1, result * array[index]);
                         break;
                     case 3:
-                        if (result < 0) {
-                            dfs(index + 1, -(-(result) / array[index]));
-                        }
                         dfs(index + 1, result / array[index]);
                         break;
                 }
