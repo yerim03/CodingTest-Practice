@@ -5,7 +5,6 @@ public class Main {
 
     static int n, max = 0;
     static int[][] eggs;
-    static boolean[] broken = new boolean[8];
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -37,46 +36,25 @@ public class Main {
             return;
         }
 
-        //손에 든 계란이 깨졌거나, 깨지지 않은 다른 계란이 없는 경우
-        if (broken[hand] || cnt == n - 1) {
+        if (eggs[hand][0] <= 0) {   //손에 든 계란이 깨진 경우 -> 내려놓고 다음 계란을 든다
             eggBreak(hand + 1, cnt);
-            return;
-        }
-
-        int temp = cnt;
-        for (int i = 0; i < n; i++) {
-            if (hand == i) {
-                continue;
+        } else {                    //손에 든 계란이 깨지지 않은 경우 -> 계란치기 실행
+            boolean flag = false;   //계란치기를 한번이라도 했는지 안했는지
+            for (int i = 0; i < n; i++) {
+                if (hand == i || eggs[i][0] <= 0) { //
+                    continue;
+                }
+                flag = true;
+                eggs[hand][0] -= eggs[i][1];
+                eggs[i][0] -= eggs[hand][1];
+                eggBreak(hand + 1, cnt + (eggs[hand][0] <= 0 ? 1 : 0) + (eggs[i][0] <= 0 ? 1 : 0));
+                eggs[hand][0] += eggs[i][1];
+                eggs[i][0] += eggs[hand][1];
             }
 
-            if (!broken[i]) {
-                hitEgg(hand, i);    //두 계란을 치기
-                if (eggs[hand][0] <= 0) {
-                    cnt++;
-                    broken[hand] = true;
-                }
-                if (eggs[i][0] <= 0) {
-                    cnt++;
-                    broken[i] = true;
-                }
+            if (!flag) {    //깨지지 않은 계란이 없어서 한 번도 치지 못한 경우
                 eggBreak(hand + 1, cnt);
-                restoreEgg(hand, i);//원래대로
-                cnt = temp;
             }
         }
-    }
-
-    //두 계란 치기
-    private static void hitEgg(int hand, int i) {
-        //계란의 내구도 -= 상대 계란의 무게
-        eggs[hand][0] -= eggs[i][1];
-        eggs[i][0] -= eggs[hand][1];
-    }
-    
-    private static void restoreEgg(int hand, int i) {
-        eggs[hand][0] += eggs[i][1];
-        eggs[i][0] += eggs[hand][1];
-        broken[hand] = false;
-        broken[i] = false;
     }
 }
