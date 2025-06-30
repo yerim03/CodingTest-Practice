@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 /**
@@ -10,7 +12,7 @@ public class Main {
     static int[][] array;
     static int n, m;
     static int oneCnt = 0;  //1의 개수
-    static int area, cnt = 0, maxArea = Integer.MIN_VALUE;
+    static int area = 0, cnt = 0, maxArea = 0;
     static boolean[][] visited;
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
@@ -31,45 +33,37 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < m; j++) {
                 array[i][j] = Integer.parseInt(st.nextToken());
-                if (array[i][j] == 1) { //1의 개수 세기
-                    oneCnt++;
-                }
             }
-        }
-
-        //그림이 하나도 없는 경우
-        if (oneCnt == 0) {
-            System.out.print(0 + " \n" + 0);
-            return;
         }
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                area = 0;
-                if(dfs(i, j)) {
+                if(!visited[i][j] && array[i][j] == 1) {
                     cnt++;
+                    dfs(i, j);
                     maxArea = Math.max(maxArea, area);
+                    area = 0;
                 }
             }
         }
         System.out.print(cnt + " \n" + maxArea);
     }
 
+    public static void dfs(int x, int y) {
+        visited[x][y] = true;
+        area++;
 
-    public static boolean dfs(int x, int y) {
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
 
-        if (x < 0 || y < 0 || x >= n || y >= m) {
-            return false;
-        }
-        if(!visited[x][y] && array[x][y] == 1) {
-            visited[x][y] = true;
-            area++;
-
-            for (int i = 0; i < 4; i++) {
-                dfs(x + dx[i], y + dy[i]);
+            if (nx < 0 || ny < 0 || nx >= n || ny >= m) {
+                continue;
             }
-            return true;
+
+            if(!visited[nx][ny] && array[nx][ny] == 1) {
+                dfs(nx, ny);
+            }
         }
-        return false;
     }
 }
