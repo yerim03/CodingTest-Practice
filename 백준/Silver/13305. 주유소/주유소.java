@@ -8,8 +8,8 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int n, result = 0;
-    static int minPrice = Integer.MAX_VALUE, minIdx = 0;
+    static int n;
+    static long result = 0;
     static int[] length;
     static int[] price;
 
@@ -39,24 +39,15 @@ public class Main {
     }
 
     public static void findMinPrice() {
-        //비용이 가장 싼 주유소의 주유비용과 주유소 번호 구하기
-        for (int i = 0; i < n - 1; i++) {
+        long minPrice = price[0];
+
+        result = minPrice * length[0];
+        for (int i = 1; i < n - 1; i++) {
             if (minPrice > price[i]) {
                 minPrice = price[i];
-                minIdx = i;
             }
+            result += minPrice * length[i];
         }
-
-        int sumLeft = 0, sumRight = 0;
-        for (int i = 0; i < minIdx; i++) {
-            sumLeft += length[i];
-        }
-
-        for (int i = minIdx; i < n - 1; i++) {
-            sumRight += length[i];
-        }
-
-        result += sumLeft * price[0] + sumRight * minPrice;
     }
 
 }
