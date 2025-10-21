@@ -4,7 +4,6 @@ import java.util.*;
 /**
  * G4 17298 오큰수
  */
-
 public class Main {
 
     public static void main(String[] args) throws IOException {
@@ -21,21 +20,17 @@ public class Main {
         }
 
         Stack<Integer> stack = new Stack<>();
-        stack.push(numbers[n - 1]);  //스택에 가장 마지막 수 push
-        nge[n - 1] = -1;    //가장 마지막수의 nge는 항상 -1
-        for (int i = n - 2; i >= 0; i--) {
-            int cur = numbers[i];   //현재 숫자
-
-            if(cur < stack.peek()) {    //stack의 top이 더 클 경우
-                nge[i] = stack.peek();
-            } else {
-                while(!stack.isEmpty() && cur >= stack.peek()) {
-                    stack.pop();
-                }
-                if(!stack.isEmpty()) nge[i] = stack.peek();
-                else    nge[i] = -1;
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && numbers[stack.peek()] < numbers[i]) {
+                nge[stack.peek()] = numbers[i];
+                stack.pop();
             }
-            stack.push(cur);
+            stack.push(i);  //현재 숫자의 인덱스 push
+        }
+
+        //오큰수가 없는 경우
+        while (!stack.isEmpty()) {
+            nge[stack.pop()] = -1;
         }
 
         StringBuilder sb = new StringBuilder();
