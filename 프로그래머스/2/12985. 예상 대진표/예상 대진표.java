@@ -1,6 +1,5 @@
 //처음 라운드에서 a번인 참가자가 b번 참가자와 만나게 되는 라운드 번호
 //a번은 b번과 만날때까지 항상 이긴다고 가정한다.
-import java.util.*;
 
 class Solution
 {
