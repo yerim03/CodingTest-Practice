@@ -1,6 +1,3 @@
-//회원대상으로 한가지 제품 할인 - 하루에 하나만 구매 가능
-//원하는 제품, 수량이 할인하는 날짜와 회원자격 날짜와 일치하게 회원가입을 하려한다.
-//회원등록 시 원하는 제품을 모두 할인받을 수 있는 등록 날짜의 총 일수
 import java.util.*;
 
 class Solution {
@@ -13,25 +10,27 @@ class Solution {
             hm.put(discount[i], hm.getOrDefault(discount[i], 0) + 1);
         }
         
-        for(int start = 0; start <= discount.length - 10; start++) {
-            boolean flag = false;
+        int start = 0;
+        int end = 9;
+        while(end < discount.length) {
+            if(check(hm, want, number))   answer++;
             
-            //다음날 세팅
-            if(start >= 1) {
-                hm.put(discount[start - 1], hm.getOrDefault(discount[start - 1], 0) - 1);
-                hm.put(discount[start + 9], hm.getOrDefault(discount[start + 9], 0) + 1);
+            //다음날 제품 세팅
+            hm.put(discount[start], hm.getOrDefault(discount[start], 0) - 1);
+            start++;
+            end++;
+            if(end < discount.length) {
+                hm.put(discount[end], hm.getOrDefault(discount[end], 0) + 1);
             }
-            
-            for(int i = 0; i < want.length; i++) {
-                if(hm.get(want[i]) != null && hm.get(want[i]) >= number[i]) {
-                    continue;
-                } else {
-                    flag = true;
-                    break;
-                }
-            }
-            if(!flag)    answer++;       
         }
+        
         return answer;
+    }
+    
+    public boolean check(Map<String, Integer> hm, String[] want, int[] number) {
+        for(int i = 0; i < want.length; i++) {
+            if(hm.getOrDefault(want[i], 0) != number[i]) return false;
+        }
+        return true;
     }
 }
