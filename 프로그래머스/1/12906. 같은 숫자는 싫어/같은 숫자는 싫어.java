@@ -1,23 +1,23 @@
 import java.util.*;
 
 public class Solution {
-    public int[] solution(int []arr) {
-        Stack<Integer> st = new Stack<>();
-
-        for (int i : arr) {
-            if (st.isEmpty()) {
-                st.push(i);
-            }
-            if (st.peek() != i) {
-                st.push(i);
+    public int[] solution(int []arr) {        
+        Deque<Integer> stack = new ArrayDeque<>();
+        
+        for(int x : arr) {
+            if (stack.isEmpty()) {
+                stack.push(x);
+            } else if (stack.peek() != x) {
+                stack.push(x);
             }
         }
-
-        int[] answer = new int[st.size()];
-
-        for (int i = answer.length - 1; i >= 0; i--) {
-            answer[i] = st.pop();
+        
+        int[] answer = new int[stack.size()];
+        
+        for(int i = stack.size() - 1; i >= 0; i--) {
+            answer[i] = stack.pop();
         }
+        
         return answer;
     }
 }
