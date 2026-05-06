@@ -1,58 +1,37 @@
-//상대팀 진영에 도착하기 위해 지나가야 하는 칸 개수의 최솟값
-//도착할 수 없을 경우 -1
-
-//벽이 0, 길이 1
-
-import java.util.*;
+//0-벽, 1-벽X
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 class Solution {
-    
-    class Pair {
-        int x;
-        int y;
-        
-        public Pair(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-    
     public int solution(int[][] maps) {
-        int answer = bfs(0, 0, maps);
-        return answer;
-    }
-    
-    public int bfs(int x, int y, int[][] maps) {
-        int n = maps.length;    //열의 크기
-        int m = maps[0].length; //행의 크기
-
-        Queue<Pair> q = new LinkedList<>();
-        int[] dx = {-1, 1, 0, 0};
-        int[] dy = {0, 0, -1, 1};
+        int answer = 0;
+        int n = maps.length;
+        int m = maps[0].length;
         
-        q.add(new Pair(x, y));
+        int[] dx = {1, -1, 0, 0};
+        int[] dy = {0, 0, 1, -1};
         
+        Queue<int[]> q = new ArrayDeque<>();
+        q.offer(new int[]{0, 0});
         
         while(!q.isEmpty()) {
-            Pair p = q.poll();
-            x = p.x;
-            y = p.y;
+            int[] poll = q.poll();
+            int x = poll[0];
+            int y = poll[1];
             
-            if(x == n - 1 && y == m - 1)    return maps[x][y];
-
             for(int i = 0; i < 4; i++) {
                 int nx = x + dx[i];
                 int ny = y + dy[i];
-            
-                if(nx < 0 || ny < 0 || nx >= n || ny >= m) {
-                     continue;
-                }
-                if(maps[nx][ny] == 1) {
-                    maps[nx][ny] = maps[x][y] + 1;
-                    q.add(new Pair(nx, ny));
-                }
+                
+                //맵 범위를 벗어나는 경우
+                if(nx < 0 || ny < 0 || nx >= n || ny >= m)  continue;
+                //벽때문에 지나갈 수 없는 경우
+                if(maps[nx][ny] != 1)   continue;
+                
+                maps[nx][ny] = maps[x][y] + 1;
+                q.offer(new int[]{nx, ny});
             }
         }
-        return -1;
+        return (maps[n - 1][m - 1] == 1) ? -1 : maps[n - 1][m - 1];
     }
 }
